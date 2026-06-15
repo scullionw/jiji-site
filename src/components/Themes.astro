@@ -1,0 +1,187 @@
+---
+import { themes } from "../themes";
+---
+
+<section class="section themes" id="themes">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Ten themes</p>
+      <h2>Make it yours.</h2>
+      <p>
+        Five dark, five light — each hand-tuned so color only ever carries
+        meaning. Try them right here: this whole page, graph and all, re-themes
+        live.
+      </p>
+    </div>
+
+    <div class="swatches" role="group" aria-label="Preview a theme">
+      {
+        themes.map((t) => (
+          <button
+            class="swatch"
+            data-theme-id={t.id}
+            aria-pressed="false"
+            style={`--sw-bg:${t.bg};--sw-accent:${t.accent}`}
+          >
+            <span class="sw-preview">
+              <span class="sw-dot" />
+              <span class="sw-bar" />
+              <span class="sw-bar short" />
+            </span>
+            <span class="sw-meta">
+              <span class="sw-label">{t.label}</span>
+              <span class="sw-scheme">{t.scheme}</span>
+            </span>
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="themes-foot">
+      Themes are the one thing a license unlocks.
+      <a href="#pricing">Everything else is free →</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  import { STORAGE_KEY, DEFAULT_THEME } from "../themes";
+
+  const root = document.documentElement;
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".swatch"),
+  );
+
+  function setActive(id: string) {
+    for (const b of buttons) {
+      b.setAttribute("aria-pressed", String(b.dataset.themeId === id));
+    }
+  }
+
+  function applyTheme(id: string) {
+    const swap = () => {
+      root.dataset.theme = id;
+    };
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce && typeof document.startViewTransition === "function") {
+      document.startViewTransition(swap);
+    } else {
+      swap();
+    }
+    try {
+      localStorage.setItem(STORAGE_KEY, id);
+    } catch {}
+    setActive(id);
+  }
+
+  setActive(root.dataset.theme || DEFAULT_THEME);
+  for (const b of buttons) {
+    b.addEventListener("click", () => {
+      const id = b.dataset.themeId;
+      if (id) applyTheme(id);
+    });
+  }
+</script>
+
+<style>
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--sp-3);
+  }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+    border-radius: var(--radius-l);
+    background: var(--clr-bg-1);
+    border: 1px solid var(--clr-border-2);
+    text-align: left;
+    transition:
+      border-color var(--t-fast) var(--ease-out),
+      transform var(--t-fast) var(--ease-out);
+  }
+
+  .swatch:hover {
+    border-color: var(--clr-border-1);
+    transform: translateY(-2px);
+  }
+
+  .swatch[aria-pressed="true"] {
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 1px var(--clr-accent);
+  }
+
+  /* A miniature window painted in the swatch's own palette. */
+  .sw-preview {
+    position: relative;
+    height: 56px;
+    border-radius: var(--radius-s);
+    background: var(--sw-bg);
+    border: 1px solid color-mix(in srgb, var(--sw-accent) 22%, transparent);
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .sw-dot {
+    position: absolute;
+    top: 11px;
+    left: 12px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--sw-accent);
+  }
+
+  .sw-bar {
+    position: absolute;
+    left: 28px;
+    top: 13px;
+    height: 5px;
+    width: 64px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--sw-accent) 55%, var(--sw-bg));
+  }
+
+  .sw-bar.short {
+    top: 30px;
+    left: 12px;
+    width: 44px;
+    background: color-mix(in srgb, var(--sw-accent) 28%, var(--sw-bg));
+  }
+
+  .sw-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+
+  .sw-label {
+    font-weight: 560;
+    font-size: 0.95rem;
+  }
+
+  .sw-scheme {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--clr-text-3);
+  }
+
+  .themes-foot {
+    margin-top: var(--sp-6);
+    color: var(--clr-text-2);
+  }
+
+  .themes-foot a {
+    color: var(--clr-accent-strong);
+    font-weight: 550;
+  }
+
+  .themes-foot a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import "../styles/tokens.css";
+import "../styles/global.css";
+import { DEFAULT_THEME } from "../themes";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Jiji — A desktop workbench for Jujutsu",
+  description = "Jiji is a fast, native macOS workbench for Jujutsu (jj). Read the graph, review diffs, and rewrite history with confidence.",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/og.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme={DEFAULT_THEME}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0e0e11" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Jiji" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Apply the saved theme before first paint so the page never flashes
+         the wrong palette. Mirrors the app's boot script. -->
+    <script is:inline>
+      (function () {
+        var ids = [
+          "midnight", "graphite", "abyss", "moss", "ember",
+          "paper", "linen", "glacier", "meadow", "dawn",
+        ];
+        try {
+          var saved = localStorage.getItem("jiji-site-theme");
+          if (saved && ids.indexOf(saved) !== -1) {
+            document.documentElement.dataset.theme = saved;
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

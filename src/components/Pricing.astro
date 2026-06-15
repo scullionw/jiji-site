@@ -1,0 +1,188 @@
+---
+import { PRICING } from "../config";
+
+const tiers = [
+  {
+    ...PRICING.solo,
+    featured: false,
+    features: [
+      "1 device activation",
+      "All 10 light & dark themes",
+      "Lifetime updates",
+      "Source-available (FSL-1.1-MIT)",
+    ],
+  },
+  {
+    ...PRICING.personal,
+    featured: true,
+    features: [
+      "2 device activations",
+      "All 10 light & dark themes",
+      "Lifetime updates",
+      "Source-available (FSL-1.1-MIT)",
+    ],
+  },
+];
+---
+
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="section-head center">
+      <p class="eyebrow">Pricing</p>
+      <h2>Free to use. Pay if you love it.</h2>
+      <p>
+        Every jj workflow in Jiji works without a license. A one-time purchase
+        unlocks all ten themes and directly funds development. No subscription,
+        lifetime updates.
+      </p>
+    </div>
+
+    <div class="tiers">
+      {
+        tiers.map((t) => (
+          <article class="tier" class:list={[{ featured: t.featured }]}>
+            {t.featured && <span class="badge">Most popular</span>}
+            <h3>{t.name}</h3>
+            <p class="blurb">{t.blurb}</p>
+            <p class="price">
+              <span class="amount">{t.price}</span>
+              <span class="once">once</span>
+            </p>
+            <a class={`btn ${t.featured ? "btn-primary" : "btn-ghost"} buy`} href={t.url} rel="noopener">
+              Buy {t.name}
+            </a>
+            <ul class="feats">
+              {t.features.map((f) => (
+                <li>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" /></svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="fineprint">
+      Secure checkout and license keys handled by <strong>Polar</strong>. Sales
+      tax included. Your key arrives by email — paste it into Jiji to unlock
+      themes.
+    </p>
+  </div>
+</section>
+
+<style>
+  .center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-4);
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .tier {
+    position: relative;
+    padding: var(--sp-6);
+    background: var(--clr-bg-1);
+    border: 1px solid var(--clr-border-2);
+    border-radius: var(--radius-xl);
+  }
+
+  .tier.featured {
+    border-color: color-mix(in srgb, var(--clr-accent) 50%, transparent);
+    box-shadow: var(--shadow-2);
+  }
+
+  .badge {
+    position: absolute;
+    top: var(--sp-5);
+    right: var(--sp-5);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--clr-accent-strong);
+    background: var(--clr-accent-dim);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  .blurb {
+    margin-top: var(--sp-1);
+    color: var(--clr-text-2);
+    font-size: 0.96rem;
+  }
+
+  .price {
+    margin: var(--sp-4) 0;
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+  }
+
+  .amount {
+    font-size: 2.6rem;
+    font-weight: 680;
+    letter-spacing: -0.03em;
+  }
+
+  .once {
+    color: var(--clr-text-3);
+    font-size: 0.95rem;
+  }
+
+  .buy {
+    width: 100%;
+  }
+
+  .feats {
+    list-style: none;
+    margin-top: var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .feats li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.96rem;
+    color: var(--clr-text-2);
+  }
+
+  .feats svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--clr-ok);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .fineprint {
+    margin-top: var(--sp-6);
+    text-align: center;
+    font-size: var(--fs-small);
+    color: var(--clr-text-3);
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  .fineprint strong {
+    color: var(--clr-text-2);
+    font-weight: 600;
+  }
+</style>

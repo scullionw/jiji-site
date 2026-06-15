@@ -1,0 +1,134 @@
+---
+import { LICENSE_URL, JJ_URL } from "../config";
+
+const faqs = [
+  {
+    q: "Is Jiji free?",
+    a: "Yes. Every Jujutsu workflow in Jiji works without a license. A one-time purchase unlocks the themes and supports development — it isn't a paywall on functionality.",
+  },
+  {
+    q: "What does paying unlock?",
+    a: "All ten light and dark themes, plus lifetime updates and our genuine thanks. Unregistered copies use a single default light theme.",
+  },
+  {
+    q: "Which platforms are supported?",
+    a: "macOS only for now — a universal build for both Apple Silicon and Intel, signed and notarized. Windows and Linux aren't available yet.",
+  },
+  {
+    q: "Is it stable?",
+    a: "Jiji is alpha. It's meant for people who already know jj well enough to sanity-check what a GUI is doing before trusting it with important work.",
+  },
+  {
+    q: "Do I need to know jj?",
+    a: "Jiji is a workbench, not a tutorial. It's best if you already use Jujutsu and want a faster, more legible daily workflow.",
+  },
+  {
+    q: "How do device licenses work?",
+    a: "Solo activates one device; Personal activates two. Licenses validate against Polar, and stay valid offline once activated.",
+  },
+  {
+    q: "Is it open source?",
+    a: "The source is available under FSL-1.1-MIT: free for permitted uses, and each release becomes MIT two years after it ships.",
+  },
+];
+---
+
+<section class="section faq" id="faq">
+  <div class="container faq-inner">
+    <div class="section-head">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions, answered.</h2>
+    </div>
+
+    <div class="list">
+      {
+        faqs.map((f, i) => (
+          <details open={i === 0}>
+            <summary>
+              {f.q}
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
+            </summary>
+            <p>{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+
+    <p class="more">
+      Still curious? Read the <a href={LICENSE_URL} rel="noopener">license</a> or
+      learn about <a href={JJ_URL} rel="noopener">Jujutsu</a>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .faq-inner {
+    max-width: 760px;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  details {
+    border-top: 1px solid var(--clr-border-2);
+    padding: var(--sp-2) 0;
+  }
+
+  details:last-of-type {
+    border-bottom: 1px solid var(--clr-border-2);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+    font-size: 1.06rem;
+    font-weight: 560;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--clr-text-3);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+
+  details[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  details p {
+    padding: 0 0 var(--sp-4);
+    color: var(--clr-text-2);
+    max-width: 64ch;
+  }
+
+  .more {
+    margin-top: var(--sp-6);
+    color: var(--clr-text-3);
+    font-size: var(--fs-small);
+  }
+
+  .more a {
+    color: var(--clr-accent-strong);
+  }
+
+  .more a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+// Brand lockup: the app icon + "Jiji" wordmark. Used in the nav and footer.
+interface Props {
+  size?: number;
+  href?: string | null;
+}
+const { size = 26, href = "/" } = Astro.props;
+const Tag = href ? "a" : "span";
+---
+
+<Tag class="logo" {...href ? { href } : {}} aria-label="Jiji">
+  <img src="/jiji-icon.png" width={size} height={size} alt="" />
+  <span class="word">Jiji</span>
+</Tag>
+
+<style define:vars={{ size: `${size}px` }}>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--clr-text-1);
+  }
+
+  img {
+    width: var(--size);
+    height: var(--size);
+    border-radius: calc(var(--size) * 0.225);
+  }
+
+  .word {
+    font-size: 1.18rem;
+    font-weight: 640;
+    letter-spacing: -0.02em;
+  }
+</style>

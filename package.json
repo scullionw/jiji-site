@@ -1,0 +1,17 @@
+{
+  "name": "jiji-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Marketing site for Jiji — a desktop workbench for Jujutsu.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.7"
+  }
+}
