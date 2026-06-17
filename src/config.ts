@@ -46,8 +46,8 @@ export const PRICING = {
   personal: {
     name: "Personal",
     price: "$20",
-    blurb: "For your laptop and your desktop.",
-    devices: "2 device activations",
+    blurb: "For all your machines.",
+    devices: "5 device activations",
     url: PERSONAL_CHECKOUT_URL,
   },
 } as const;
