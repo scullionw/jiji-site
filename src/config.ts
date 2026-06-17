@@ -24,10 +24,13 @@ export const CONTRIBUTING_URL =
 // Jujutsu, for the curious.
 export const JJ_URL = "https://github.com/jj-vcs/jj";
 
-// TODO(launch): real Polar checkout links, created once the two products
-// (Jiji Solo $15, Jiji Personal $20) exist in Polar.
-export const SOLO_CHECKOUT_URL = "https://polar.sh";
-export const PERSONAL_CHECKOUT_URL = "https://polar.sh";
+// Polar hosted checkout links for the two one-time products (Jiji Solo $15,
+// Jiji Personal $20). These are the same links the app's registration popover
+// uses; the app validates the resulting key against Polar org a37fb037-….
+export const SOLO_CHECKOUT_URL =
+  "https://buy.polar.sh/polar_cl_5MwwECsz2qK0oUEHHLfeXktj9kSxsjlnRWOA60jKFGl";
+export const PERSONAL_CHECKOUT_URL =
+  "https://buy.polar.sh/polar_cl_2vELWWSZMb7KoKqDjsILXonFNpeHyS1JtwZxg2ixOUw";
 
 // TODO(launch): set up forwarding for this address on the domain.
 export const SUPPORT_EMAIL = "hello@jijiworkbench.com";
