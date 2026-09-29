@@ -1,22 +1,21 @@
-/* Site-level base + primitives. Builds on tokens.css. Unlike the app shell
-   (which locks scroll and disables selection), the site is a normal scrolling
-   document with selectable text. Marketing type scale is rem/clamp-based and
-   lives here; the app's px --text-* tokens stay reserved for the workbench
-   mock so it renders at the product's real density. */
+/* Site base and primitives on top of the app's tokens. The page follows the
+   app's rules: flat surfaces from the bg steps, hairline joins, the
+   platform's fonts, color only where it means something. The type scale
+   is the page's own (a document, not a workbench); spacing and radii come
+   from the tokens. */
 
 :root {
-  --site-max: 1140px;
-  --site-pad: clamp(20px, 5vw, 40px);
-  --section-gap: clamp(72px, 11vw, 132px);
+  --page-max: 1120px;
+  --page-pad: clamp(16px, 4vw, 32px);
+  --band: clamp(56px, 8vw, 96px);
+  --nav-h: 52px;
 
-  --fs-display: clamp(2.4rem, 6vw, 4rem);
-  --fs-h2: clamp(1.7rem, 4vw, 2.5rem);
-  --fs-h3: 1.2rem;
-  --fs-lead: clamp(1.06rem, 2.2vw, 1.32rem);
-  --fs-body: 1.0625rem;
-  --fs-small: 0.9rem;
-
-  --nav-h: 60px;
+  --fs-hero: clamp(2.1rem, 5vw, 3.25rem);
+  --fs-h2: clamp(1.45rem, 3vw, 1.9rem);
+  --fs-lead: clamp(1.02rem, 1.6vw, 1.15rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-code: 0.8125rem;
 }
 
 *,
@@ -28,34 +27,25 @@
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + 12px);
+  scroll-padding-top: calc(var(--nav-h) + 16px);
   -webkit-text-size-adjust: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }
 
 body {
   font-family: var(--font-ui);
   font-size: var(--fs-body);
-  line-height: 1.62;
+  line-height: 1.6;
   color: var(--clr-text-1);
-  background: var(--clr-bg-0);
+  background: var(--clr-bg-1);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
 }
 
 h1,
 h2,
 h3 {
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  font-weight: 650;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
   text-wrap: balance;
 }
 
@@ -68,17 +58,37 @@ a {
   text-decoration: none;
 }
 
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
+.prose a,
+a.link {
+  color: var(--clr-accent-strong);
+}
+
+.prose a:hover,
+a.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 img {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+}
+
+p code,
+li code,
+dd code {
+  font-size: 0.86em;
+  padding: 0.1em 0.3em;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--clr-text-1) 8%, transparent);
+  color: var(--clr-text-1);
+  white-space: nowrap;
 }
 
 ::selection {
@@ -91,115 +101,113 @@ img {
   border-radius: var(--radius-s);
 }
 
-/* Cross-fade theme swaps the way the app does: one snapshot of the old
-   surface fades into the new, regardless of how much is on screen. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: var(--t-slow);
-}
-
-/* ── Layout primitives ── */
+/* ── Layout ── */
 
 .container {
   width: 100%;
-  max-width: var(--site-max);
+  max-width: var(--page-max);
   margin-inline: auto;
-  padding-inline: var(--site-pad);
+  padding-inline: var(--page-pad);
 }
 
-.section {
-  padding-block: var(--section-gap);
+.band {
+  padding-block: var(--band);
+  border-top: 1px solid var(--clr-border-2);
 }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--clr-accent-strong);
-}
-
-.section-head {
+.band-head {
   max-width: 640px;
-  margin-bottom: clamp(32px, 5vw, 56px);
+  margin-bottom: clamp(28px, 4vw, 44px);
 }
 
-.section-head h2 {
+.band-head h2 {
   font-size: var(--fs-h2);
-  margin-top: var(--sp-3);
 }
 
-.section-head p {
-  margin-top: var(--sp-4);
+.band-head p {
+  margin-top: var(--sp-3);
   font-size: var(--fs-lead);
   color: var(--clr-text-2);
 }
 
-.mono {
-  font-family: var(--font-mono);
-}
-
-/* ── Buttons ── */
+/* ── Buttons, as in the app: solid fills, one hairline, no ornament ── */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
-  height: 46px;
-  padding: 0 22px;
+  height: 40px;
+  padding: 0 18px;
   border-radius: var(--radius-m);
-  font-size: 0.97rem;
-  font-weight: 560;
+  border: 1px solid transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  border: 1px solid transparent;
-  transition:
-    background var(--t-fast) var(--ease-out),
-    border-color var(--t-fast) var(--ease-out),
-    transform var(--t-fast) var(--ease-out);
+  transition: background var(--t-fast) var(--ease-out);
 }
 
-.btn:active {
-  transform: translateY(1px);
+.btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
-.btn-primary {
+.btn.primary {
   background: var(--clr-accent);
   color: var(--clr-accent-contrast);
 }
 
-.btn-primary:hover {
-  background: var(--clr-accent-strong);
+.btn.primary:hover {
+  background: color-mix(in srgb, var(--clr-accent) 88%, var(--clr-text-1));
 }
 
-.btn-ghost {
-  background: var(--clr-bg-2);
-  color: var(--clr-text-1);
-  border-color: var(--clr-border-1);
-}
-
-.btn-ghost:hover {
+.btn.secondary {
   background: var(--clr-bg-3);
-  border-color: var(--clr-text-3);
+  border-color: var(--clr-border-1);
+  color: var(--clr-text-1);
 }
 
-.btn svg {
-  width: 1.05em;
-  height: 1.05em;
-  flex-shrink: 0;
+.btn.secondary:hover {
+  background: color-mix(in srgb, var(--clr-bg-3) 85%, var(--clr-text-1));
 }
 
-/* macOS chip used under CTAs */
-.meta-line {
+.btn.small {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.875rem;
+}
+
+.meta {
   font-size: var(--fs-small);
   color: var(--clr-text-3);
 }
 
-.meta-line .dot {
-  margin-inline: 0.5em;
-  opacity: 0.5;
+.meta .sep {
+  margin-inline: 0.45em;
+}
+
+/* ── Terminal-style code block ── */
+
+.term {
+  font-family: var(--font-mono);
+  font-size: var(--fs-code);
+  line-height: 1.7;
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--clr-border-2);
+  border-radius: var(--radius-l);
+  background: var(--clr-bg-0);
+  color: var(--clr-text-1);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.term .prompt,
+.term .note {
+  color: var(--clr-text-3);
+}
+
+.term .prompt {
+  user-select: none;
 }

@@ -1,134 +1,100 @@
 ---
-import { LICENSE_URL, JJ_URL } from "../config";
+import { ISSUES_URL, LICENSE_URL, SUPPORT_EMAIL } from "../config";
 
+// Plain answers to what people ask first. Answers are trusted HTML (for
+// <code>); every one must stay true of the current release.
 const faqs = [
   {
-    q: "Is Jiji free?",
-    a: "Yes. Every Jujutsu workflow in Jiji works without a license. A one-time purchase unlocks the themes and supports development — it isn't a paywall on functionality.",
+    q: "Is it open source?",
+    a: "It is source-available under FSL-1.1-MIT. You can read, modify and redistribute it for anything except a competing commercial product, and each release becomes MIT two years after it ships.",
   },
   {
-    q: "What does paying unlock?",
-    a: "All ten light and dark themes, plus lifetime updates and our genuine thanks. Unregistered copies use a single default light theme.",
+    q: "Which platforms does it run on?",
+    a: "macOS only for now: one universal build for Apple Silicon and Intel, signed and notarized. Linux and Windows builds aren't available yet.",
   },
   {
-    q: "Which platforms are supported?",
-    a: "macOS only for now — a universal build for both Apple Silicon and Intel, signed and notarized. Windows and Linux aren't available yet.",
+    q: "Do I need the jj CLI?",
+    a: "No. Jiji embeds jj-lib 0.45, so it reads and writes repositories and config the way jj 0.45 does. Keep <code>jj</code> installed if you like a terminal; both work on the same repository at once. Fetch and push use Git, so <code>git</code> must be on your <code>PATH</code>.",
+  },
+  {
+    q: "Can I use it on a Git repository?",
+    a: "Yes. Opening a plain Git repository offers to set jj up in it, like <code>jj git init --colocate</code>: a <code>.jj</code> folder appears next to <code>.git</code>, your branches become bookmarks, and Git keeps working.",
+  },
+  {
+    q: "How is it different from gg, jjui or VisualJJ?",
+    a: "They are good front ends for jj: gg is a desktop app, jjui and lazyjj run in a terminal, VisualJJ and Jujutsu Kaizen live in VS Code. Jiji is a diff-first desktop workbench with stacked-PR publishing, landing and a CLI built in.",
   },
   {
     q: "Is it stable?",
-    a: "Jiji is alpha. It's meant for people who already know jj well enough to sanity-check what a GUI is doing before trusting it with important work.",
+    a: "It is alpha. It is meant for people who know jj well enough to sanity-check what a GUI does. Everything Jiji changes goes through jj's operation log, so <code>jj undo</code> and <code>jj op restore</code> can take any of it back.",
   },
   {
-    q: "Do I need to know jj?",
-    a: "Jiji is a workbench, not a tutorial. It's best if you already use Jujutsu and want a faster, more legible daily workflow.",
+    q: "How do updates work?",
+    a: "Jiji checks GitHub Releases, downloads a new version in the background, and offers to restart. It never restarts on its own.",
   },
   {
-    q: "How do device licenses work?",
-    a: "Solo activates one device; Personal activates five. Licenses validate against Polar, and stay valid offline once activated.",
-  },
-  {
-    q: "Is it open source?",
-    a: "The source is available under FSL-1.1-MIT: free for permitted uses, and each release becomes MIT two years after it ships.",
+    q: "How do licenses work?",
+    a: "A one-time purchase through Polar. Solo activates one device and Personal up to five. The key is checked with Polar at most once a day and keeps working offline.",
   },
 ];
 ---
 
-<section class="section faq" id="faq">
-  <div class="container faq-inner">
-    <div class="section-head">
-      <p class="eyebrow">FAQ</p>
-      <h2>Questions, answered.</h2>
+<section class="band" id="faq">
+  <div class="container faq">
+    <div class="band-head">
+      <h2>Questions</h2>
+      <p>
+        Something else? <a class="link" href={ISSUES_URL}>Open an issue</a> or write to
+        <a class="link" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+      </p>
     </div>
 
-    <div class="list">
+    <dl>
       {
-        faqs.map((f, i) => (
-          <details open={i === 0}>
-            <summary>
-              {f.q}
-              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>
-            </summary>
-            <p>{f.a}</p>
-          </details>
+        faqs.map((f) => (
+          <div class="item">
+            <dt>{f.q}</dt>
+            <dd set:html={f.a} />
+          </div>
         ))
       }
-    </div>
+    </dl>
 
-    <p class="more">
-      Still curious? Read the <a href={LICENSE_URL} rel="noopener">license</a> or
-      learn about <a href={JJ_URL} rel="noopener">Jujutsu</a>.
+    <p class="meta">
+      The full terms are in the <a class="link" href={LICENSE_URL}>license</a>.
     </p>
   </div>
 </section>
 
 <style>
-  .faq-inner {
-    max-width: 760px;
+  dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 clamp(20px, 4vw, 48px);
   }
 
-  .list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  details {
+  .item {
+    padding: var(--sp-4) 0 var(--sp-5);
     border-top: 1px solid var(--clr-border-2);
-    padding: var(--sp-2) 0;
   }
 
-  details:last-of-type {
-    border-bottom: 1px solid var(--clr-border-2);
+  dt {
+    font-weight: 600;
   }
 
-  summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-3);
-    padding: var(--sp-4) 0;
-    font-size: 1.06rem;
-    font-weight: 560;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  summary svg {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: var(--clr-text-3);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: transform var(--t-fast) var(--ease-out);
-  }
-
-  details[open] summary svg {
-    transform: rotate(180deg);
-  }
-
-  details p {
-    padding: 0 0 var(--sp-4);
+  dd {
+    margin-top: var(--sp-2);
+    font-size: 0.9375rem;
     color: var(--clr-text-2);
-    max-width: 64ch;
   }
 
-  .more {
-    margin-top: var(--sp-6);
-    color: var(--clr-text-3);
-    font-size: var(--fs-small);
+  .meta {
+    margin-top: var(--sp-5);
   }
 
-  .more a {
-    color: var(--clr-accent-strong);
-  }
-
-  .more a:hover {
-    text-decoration: underline;
+  @media (max-width: 760px) {
+    dl {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

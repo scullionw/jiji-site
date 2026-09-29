@@ -1,0 +1,62 @@
+---
+import { CLI_DOCS_URL, JJPR_URL } from "../config";
+---
+
+<section class="band" id="stacks">
+  <div class="container split">
+    <div class="copy prose">
+      <h2>Stacks become pull requests</h2>
+      <p>
+        Publish pushes a stack to GitHub as one pull request per change, in landing order,
+        and brings their bases and descriptions up to date each time you publish again.
+        Follow checks and
+        reviews in the app, land one round, or let auto-land merge the stack and rebase what
+        is left while Jiji is open. Stacks made with <a href={JJPR_URL}>jjpr</a> are
+        recognized as they are.
+      </p>
+      <p>
+        The same engine runs in your terminal as <code>jiji</code>. Every stack command takes
+        <code>--dry-run</code> and <code>--json</code>, so scripts and coding agents can
+        publish and land too. <a href={CLI_DOCS_URL}>Read the CLI guide</a>.
+      </p>
+    </div>
+    <pre class="term" aria-label="jiji command examples"><span class="prompt">$ </span>jiji status             <span class="note"># stack, PRs, landing readiness</span>
+<span class="prompt">$ </span>jiji publish --dry-run  <span class="note"># preview pushes and PR updates</span>
+<span class="prompt">$ </span>jiji publish --draft    <span class="note"># open new PRs as drafts</span>
+<span class="prompt">$ </span>jiji ready              <span class="note"># mark them ready for review</span>
+<span class="prompt">$ </span>jiji land               <span class="note"># land one round, reconcile</span>
+<span class="prompt">$ </span>jiji watch              <span class="note"># auto-land until done</span></pre>
+  </div>
+</section>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+  }
+
+  h2 {
+    font-size: var(--fs-h2);
+    margin-bottom: var(--sp-4);
+  }
+
+  .copy p {
+    color: var(--clr-text-2);
+  }
+
+  .copy p + p {
+    margin-top: var(--sp-4);
+  }
+
+  .term {
+    margin-top: var(--sp-1);
+  }
+
+  @media (max-width: 860px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

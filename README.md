@@ -1,36 +1,25 @@
 # jiji-site
 
-Marketing + download site for [Jiji](https://github.com/scullionw/jiji), a desktop workbench for [Jujutsu](https://github.com/jj-vcs/jj).
+The website for [Jiji](https://github.com/scullionw/jiji), a desktop workbench for [Jujutsu](https://github.com/jj-vcs/jj), served at [jijiworkbench.com](https://jijiworkbench.com).
 
-Built with [Astro](https://astro.build) as a static site. It reuses Jiji's own design tokens (`src/styles/tokens.css`) so the site looks like the app — including the same ten themes, live-switchable on the page.
+A static [Astro](https://astro.build) site. `src/styles/tokens.css` is a verbatim copy of the app's design tokens, so the page uses the product's surfaces, type and ten themes; the pricing section's swatches re-theme the page.
 
 ## Develop
 
 ```bash
 bun install
 bun run dev      # http://localhost:4321
-```
-
-```bash
 bun run build    # static output in dist/
 bun run preview  # serve the built site locally
 ```
 
-## Deploy (Cloudflare Pages)
+## Deploy
 
-- Framework preset: **Astro**
-- Build command: `bun run build`
-- Output directory: `dist`
-- Custom domain: `jijiworkbench.com` (registered at Porkbun; point nameservers at Cloudflare)
+Cloudflare Pages builds `main` (`bun run build`, output `dist/`) and serves it on `jijiworkbench.com`. Pushing `main` deploys.
 
-## Configuration
+## Keeping it current
 
-All outward-facing URLs live in one place: [`src/config.ts`](src/config.ts).
-
-Before launch, replace the placeholders marked `TODO`:
-
-- `SOLO_CHECKOUT_URL` / `PERSONAL_CHECKOUT_URL` — Polar checkout links (created once the Polar products exist)
-- `SUPPORT_EMAIL` — set up forwarding for the domain
-- `public/og.png` — a proper 1200×630 social image (currently the app icon)
-
-The macOS download link (`DOWNLOAD_URL`) points at the latest GitHub Release DMG and is already live.
+- **Facts and links** live in [`src/config.ts`](src/config.ts). Bump `VERSION` with each app release; `DOWNLOAD_URL` always serves the newest release's DMG.
+- **Tokens**: copy the app's `src/lib/styles/tokens.css` over `src/styles/tokens.css` when the app's palette changes, and mirror theme swatches in `src/themes.ts`.
+- **Screenshots** in `public/screens/` are the app's real frontend rendered with the visual harness (`scripts/visual-harness` in the app repo) over a clone of the jj repository. The copies in `docs/images/` of the app repo come from the same captures.
+- **Claims**: every feature, FAQ answer and privacy line must stay true of the current release.

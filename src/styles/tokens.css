@@ -1,63 +1,150 @@
-/* Jiji design tokens — ported from the app (src/lib/styles/tokens.css) so the
-   site looks like the product and demos the real themes.
+/* Jiji design tokens, copied verbatim from the app
+   (github.com/scullionw/jiji, src/lib/styles/tokens.css) so the site uses the
+   product's own surfaces, type and palettes. Keep the two in sync. */
+
+/* Jiji design tokens.
+
+   The interface is an instrument panel for the graph and the diff: chrome
+   recedes, content carries the color. Depth comes from four close surface
+   steps and hairlines — no gradients, no glass, no glows. The one shadow
+   in the system belongs to surfaces that genuinely float (menus, popovers,
+   the palette), because nothing else can separate them from what they
+   cover.
+
+     bg-0  the frame: title bar, rail, status bar
+     bg-1  the working panes: graph, diff, section pages
+     bg-2  surfaces that sit above a pane: popovers, menus, file headers
+     bg-3  controls: buttons, active segments, ref labels
 
    Structure (type, spacing, radii, motion) lives once on :root. Color comes
-   from theme palettes: Midnight is the base on :root and every other theme
-   overrides it under [data-theme="<id>"]. Five dark (midnight, graphite,
-   abyss, moss, ember) and five light (paper, linen, glacier, meadow, dawn).
-   The site's boot script sets data-theme before paint; the theme switcher
-   swaps it live. Keep the palettes in sync with the app. */
+   from theme palettes: Midnight is the base on :root (it matches the window
+   background the app boots with) and every other theme overrides it under
+   [data-theme="<id>"]. Five dark (midnight, graphite, abyss, moss, ember)
+   and five light (paper, linen, glacier, meadow, dawn).
+
+   The registry — ids, labels, schemes, swatches — lives in
+   $lib/state/theme.svelte.ts. The boot script in app.html and the visual
+   harness (scripts/harness/harness.js) carry copies of the id lists; keep
+   all three in sync when adding a theme. */
 
 :root {
   color-scheme: dark;
 
-  /* ── Midnight: neutral charcoal with a violet cast, iris accent ── */
-  --clr-bg-0: #0e0e11;
-  --clr-bg-1: #15151a;
-  --clr-bg-2: #1b1b22;
-  --clr-bg-3: #23232c;
+  /* ── Midnight: near-neutral charcoal with a cool cast, indigo accent ── */
+
+  --clr-bg-0: #101115;
+  --clr-bg-1: #15161b;
+  --clr-bg-2: #1b1c22;
+  --clr-bg-3: #24252d;
   --clr-bg-hover: rgb(255 255 255 / 0.045);
 
-  --clr-border-1: rgb(255 255 255 / 0.13);
-  --clr-border-2: rgb(255 255 255 / 0.07);
+  --clr-border-1: rgb(255 255 255 / 0.1);
+  --clr-border-2: rgb(255 255 255 / 0.06);
 
-  --clr-text-1: #e8e9ee;
-  --clr-text-2: #9b9ea8;
-  --clr-text-3: #62646e;
+  --clr-text-1: #e9eaf0;
+  --clr-text-2: #a3a6b3;
+  --clr-text-3: #7b7e8b;
 
-  --clr-accent: #8b8df2;
-  --clr-accent-strong: #a3a5f7;
-  --clr-accent-dim: rgb(139 141 242 / 0.14);
-  --clr-accent-contrast: #101013;
+  --clr-accent: #7078ee;
+  --clr-accent-strong: #a6abff;
+  --clr-accent-dim: rgb(112 120 238 / 0.17);
+  /* Text on a solid accent fill (primary buttons, the conflict badge) */
+  --clr-accent-contrast: #ffffff;
 
-  --clr-working-copy: #4ec9b0;
-  --clr-working-copy-dim: rgb(78 201 176 / 0.14);
-  --clr-ok: #58b47c;
-  --clr-warn: #d9a04c;
-  --clr-danger: #e0605c;
+  --clr-working-copy: #3fc6a4;
+  --clr-working-copy-dim: rgb(63 198 164 / 0.14);
+  --clr-ok: #4fb77a;
+  --clr-warn: #d9a441;
+  --clr-danger: #e5564e;
 
-  --clr-scrollbar: rgb(255 255 255 / 0.12);
-  --clr-scrollbar-hover: rgb(255 255 255 / 0.2);
+  /* Workstream lanes: in the graph, hue is identity. Streams take a slot
+     in snapshot order and cycle; rails, node markers and workstream dots
+     all draw from the same slot, so one stream reads as one color on every
+     surface. Slot 0 rides the theme accent; the fixed hues that follow are
+     spaced to stay apart from the semantic set (ok/warn/danger/working
+     copy). The light set is deepened alongside the light syntax palette
+     below. */
+  --lane-0: var(--clr-accent);
+  --lane-1: #58a8e4;
+  --lane-2: #c286d8;
+  --lane-3: #e07c9f;
+  --lane-4: #55b98a;
+  --lane-5: #cf9f55;
 
-  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.25);
-  --shadow-2: 0 4px 16px rgb(0 0 0 / 0.35);
-  --shadow-3: 0 18px 50px rgb(0 0 0 / 0.45);
-  --shadow-edge: 0 1px 0 rgb(0 0 0 / 0.12);
+  /* Syntax — one restrained set per scheme, shared by every theme: hues
+     mark scan anchors (keywords, strings, types) and everything else stays
+     plain text. The light set is the :where() group at the end (kept
+     low-specificity so a theme block can override any --syn-* token). */
+  --syn-kw: #c392dc;
+  --syn-str: #9fc17e;
+  --syn-const: #d9a86b;
+  --syn-type: #6fc0d0;
+  --syn-fn: #82aee8;
+  --syn-prop: #9cb4d6;
+  --syn-comment: var(--clr-text-3);
+  --syn-meta: #cc9f7c;
+
+  /* Diff surfaces — a dedicated add/remove pair per scheme. Line fills are
+     translucent over the pane; gutter fills are opaque mixes so line
+     numbers sit on a solid rail; word fills mark the changed span. */
+  --diff-add-fg: #57c97a;
+  --diff-add-bg: rgb(56 170 90 / 0.14);
+  --diff-add-gutter: color-mix(in srgb, rgb(56 170 90) 22%, var(--clr-bg-1));
+  --diff-add-word: rgb(56 170 90 / 0.36);
+  --diff-del-fg: #f0736b;
+  --diff-del-bg: rgb(236 84 74 / 0.13);
+  --diff-del-gutter: color-mix(in srgb, rgb(236 84 74) 20%, var(--clr-bg-1));
+  --diff-del-word: rgb(236 84 74 / 0.36);
+
+  --clr-scrollbar: rgb(255 255 255 / 0.13);
+  --clr-scrollbar-hover: rgb(255 255 255 / 0.24);
+
+  /* The one shadow: floating surfaces only. */
+  --shadow-popover:
+    0 12px 32px -8px rgb(0 0 0 / 0.55),
+    0 2px 6px rgb(0 0 0 / 0.3);
 
   /* ── Structure (theme-independent) ── */
+
+  /* Derived surfaces, resolved at use time so every theme gets its own
+     mix. The well recesses inputs and segmented tracks below the pane;
+     the diff's gutter rail and elided bands sit a half step down. */
+  --clr-bg-well: color-mix(in srgb, var(--clr-bg-0) 70%, var(--clr-bg-1));
+  --clr-ok-dim: color-mix(in srgb, var(--clr-ok) 14%, transparent);
+  --clr-warn-dim: color-mix(in srgb, var(--clr-warn) 14%, transparent);
+  --clr-danger-dim: color-mix(in srgb, var(--clr-danger) 14%, transparent);
+  --diff-gutter-surface: color-mix(in srgb, var(--clr-bg-0) 45%, var(--clr-bg-1));
+  --diff-recess: color-mix(in srgb, var(--clr-bg-0) 60%, var(--clr-bg-1));
+  --diff-file-head: var(--clr-bg-2);
+
+  /* Frame geometry. The title bar matches the height macOS centers its
+     traffic lights in (overlay title bar, default button position). */
+  --titlebar-h: 32px;
+  --statusbar-h: 24px;
+  --rail-w: 44px;
+  --toolbar-h: 36px;
+
+  /* Typography: the platform's own faces, so Jiji reads like the rest of
+     the machine and ships no font bytes. */
   --font-ui:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Ubuntu",
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    system-ui, Ubuntu, Cantarell, "Noto Sans", sans-serif;
   --font-mono:
-    ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Code", Consolas,
-    monospace;
-  --text-xs: 10px;
-  --text-s: 11px;
+    ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono",
+    "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+  --text-xs: 11px;
+  --text-s: 12px;
   --text-m: 13px;
-  --text-l: 15px;
-  --text-xl: 22px;
-  --text-code: 11.5px;
-  --lh-code: 1.6;
+  --text-l: 14px;
+  /* Section-page titles: enough to anchor a view, never a headline. */
+  --text-title: 17px;
+  --text-xl: 20px;
+  --track-tight: -0.01em;
+  --track-caps: 0.04em;
+  /* Diff/code surfaces, tuned separately from UI text: dense enough to
+     keep a hunk on screen, integer row height so lines stay crisp. */
+  --text-code: 12px;
+  --lh-code: 1.5;
 
   --sp-1: 4px;
   --sp-2: 8px;
@@ -67,88 +154,108 @@
   --sp-6: 24px;
   --sp-8: 32px;
 
-  --radius-s: 5px;
-  --radius-m: 7px;
-  --radius-l: 10px;
-  --radius-xl: 14px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-xl: 10px;
 
-  --t-fast: 110ms;
-  --t-med: 170ms;
-  --t-slow: 260ms;
-  --ease-out: cubic-bezier(0.25, 0.7, 0.25, 1);
+  /* Motion: short and linear-feeling. Things respond, they don't perform. */
+  --t-fast: 80ms;
+  --t-med: 140ms;
+  --t-slow: 200ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* ── Graphite: true-neutral grays, steel-blue accent ── */
+/* ── Graphite: true-neutral grays, steel-blue accent. The understated one;
+   no color cast anywhere, hue is reserved entirely for meaning. ── */
 :root[data-theme="graphite"] {
   color-scheme: dark;
-  --clr-bg-0: #121212;
-  --clr-bg-1: #181818;
-  --clr-bg-2: #1e1e1e;
-  --clr-bg-3: #262626;
-  --clr-bg-hover: rgb(255 255 255 / 0.05);
-  --clr-border-1: rgb(255 255 255 / 0.14);
-  --clr-border-2: rgb(255 255 255 / 0.075);
+
+  --clr-bg-0: #111111;
+  --clr-bg-1: #171717;
+  --clr-bg-2: #1d1d1d;
+  --clr-bg-3: #272727;
+  --clr-bg-hover: rgb(255 255 255 / 0.045);
+
+  --clr-border-1: rgb(255 255 255 / 0.11);
+  --clr-border-2: rgb(255 255 255 / 0.065);
+
   --clr-text-1: #ececec;
-  --clr-text-2: #a3a3a3;
-  --clr-text-3: #6a6a6a;
-  --clr-accent: #7fa3cc;
-  --clr-accent-strong: #98b8dd;
-  --clr-accent-dim: rgb(127 163 204 / 0.14);
-  --clr-accent-contrast: #0f1115;
+  --clr-text-2: #a4a4a4;
+  --clr-text-3: #7e7e7e;
+
+  --clr-accent: #7d9fc8;
+  --clr-accent-strong: #a8c1df;
+  --clr-accent-dim: rgb(125 159 200 / 0.17);
+  --clr-accent-contrast: #0e1116;
+
   --clr-working-copy: #54c0a6;
   --clr-working-copy-dim: rgb(84 192 166 / 0.14);
   --clr-ok: #6cb685;
   --clr-warn: #d4a35a;
-  --clr-danger: #d96b66;
+  --clr-danger: #dc6660;
 }
 
-/* ── Abyss: deep ocean navy, glowing cyan accent ── */
+/* ── Abyss: deep ocean navy, cyan accent. Cool throughout; borders and
+   hovers carry a faint blue. ── */
 :root[data-theme="abyss"] {
   color-scheme: dark;
-  --clr-bg-0: #080d17;
-  --clr-bg-1: #0d1422;
-  --clr-bg-2: #121a2b;
-  --clr-bg-3: #182236;
-  --clr-bg-hover: rgb(140 180 255 / 0.06);
-  --clr-border-1: rgb(160 190 255 / 0.16);
-  --clr-border-2: rgb(160 190 255 / 0.08);
+
+  --clr-bg-0: #0a0f1a;
+  --clr-bg-1: #0e1422;
+  --clr-bg-2: #131a2a;
+  --clr-bg-3: #1a2336;
+  --clr-bg-hover: rgb(140 180 255 / 0.055);
+
+  --clr-border-1: rgb(160 190 255 / 0.13);
+  --clr-border-2: rgb(160 190 255 / 0.075);
+
   --clr-text-1: #dde6f5;
-  --clr-text-2: #8e9cb8;
-  --clr-text-3: #5a6781;
-  --clr-accent: #45b8e0;
-  --clr-accent-strong: #6fcbed;
-  --clr-accent-dim: rgb(69 184 224 / 0.14);
-  --clr-accent-contrast: #061019;
+  --clr-text-2: #95a3bd;
+  --clr-text-3: #76839c;
+
+  --clr-accent: #3eb3dc;
+  --clr-accent-strong: #74cdee;
+  --clr-accent-dim: rgb(62 179 220 / 0.16);
+  --clr-accent-contrast: #04121a;
+
   --clr-working-copy: #46c78f;
   --clr-working-copy-dim: rgb(70 199 143 / 0.14);
   --clr-ok: #4fbd7f;
   --clr-warn: #d9a84f;
   --clr-danger: #e26a68;
+
   --clr-scrollbar: rgb(170 200 255 / 0.14);
-  --clr-scrollbar-hover: rgb(170 200 255 / 0.24);
-  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-2: 0 4px 16px rgb(0 0 0 / 0.45);
-  --shadow-3: 0 18px 50px rgb(0 0 0 / 0.55);
-  --shadow-edge: 0 1px 0 rgb(0 0 0 / 0.18);
+  --clr-scrollbar-hover: rgb(170 200 255 / 0.26);
+
+  --shadow-popover:
+    0 12px 32px -8px rgb(0 0 0 / 0.65),
+    0 2px 6px rgb(0 0 0 / 0.35);
 }
 
-/* ── Moss: forest-at-night green cast, leaf accent ── */
+/* ── Moss: forest-at-night green cast, leaf accent. The working copy goes
+   sky blue so "you are here" never melts into the foliage. ── */
 :root[data-theme="moss"] {
   color-scheme: dark;
-  --clr-bg-0: #0d120e;
-  --clr-bg-1: #131a14;
-  --clr-bg-2: #18211a;
-  --clr-bg-3: #1f2b21;
-  --clr-bg-hover: rgb(190 230 200 / 0.05);
-  --clr-border-1: rgb(190 230 200 / 0.14);
-  --clr-border-2: rgb(190 230 200 / 0.07);
+
+  --clr-bg-0: #0c110d;
+  --clr-bg-1: #111713;
+  --clr-bg-2: #161e18;
+  --clr-bg-3: #1e2821;
+  --clr-bg-hover: rgb(190 230 200 / 0.045);
+
+  --clr-border-1: rgb(190 230 200 / 0.11);
+  --clr-border-2: rgb(190 230 200 / 0.065);
+
   --clr-text-1: #e3ebe3;
-  --clr-text-2: #9aa99c;
-  --clr-text-3: #5f6e61;
-  --clr-accent: #7bc788;
-  --clr-accent-strong: #94d69f;
-  --clr-accent-dim: rgb(123 199 136 / 0.14);
-  --clr-accent-contrast: #0a130b;
+  --clr-text-2: #9eac9f;
+  --clr-text-3: #798779;
+
+  --clr-accent: #6fbf80;
+  --clr-accent-strong: #97d6a3;
+  --clr-accent-dim: rgb(111 191 128 / 0.16);
+  --clr-accent-contrast: #09130b;
+
   --clr-working-copy: #6aaede;
   --clr-working-copy-dim: rgb(106 174 222 / 0.14);
   --clr-ok: #66b878;
@@ -156,23 +263,29 @@
   --clr-danger: #dd6b62;
 }
 
-/* ── Ember: candlelit warm charcoal, burnt-orange accent ── */
+/* ── Ember: warm charcoal, burnt-orange accent. Teal working copy pops
+   against the warmth. ── */
 :root[data-theme="ember"] {
   color-scheme: dark;
-  --clr-bg-0: #131010;
-  --clr-bg-1: #1a1614;
-  --clr-bg-2: #211c19;
-  --clr-bg-3: #2a241f;
-  --clr-bg-hover: rgb(255 220 180 / 0.05);
-  --clr-border-1: rgb(255 220 180 / 0.13);
-  --clr-border-2: rgb(255 220 180 / 0.07);
+
+  --clr-bg-0: #120f0e;
+  --clr-bg-1: #181413;
+  --clr-bg-2: #1f1a18;
+  --clr-bg-3: #29221f;
+  --clr-bg-hover: rgb(255 220 180 / 0.045);
+
+  --clr-border-1: rgb(255 220 180 / 0.1);
+  --clr-border-2: rgb(255 220 180 / 0.06);
+
   --clr-text-1: #ede7df;
-  --clr-text-2: #a89e92;
-  --clr-text-3: #6f655a;
-  --clr-accent: #e8875a;
-  --clr-accent-strong: #f2a077;
-  --clr-accent-dim: rgb(232 135 90 / 0.14);
-  --clr-accent-contrast: #160d08;
+  --clr-text-2: #ab9f93;
+  --clr-text-3: #887e73;
+
+  --clr-accent: #e2844f;
+  --clr-accent-strong: #f1a67a;
+  --clr-accent-dim: rgb(226 132 79 / 0.16);
+  --clr-accent-contrast: #170d07;
+
   --clr-working-copy: #4ec0ae;
   --clr-working-copy-dim: rgb(78 192 174 / 0.14);
   --clr-ok: #74b87b;
@@ -180,152 +293,229 @@
   --clr-danger: #e25d55;
 }
 
-/* ── Paper: cool gray-violet paper, iris accent. The light default. ── */
+/* Light themes: the same four steps read top-down — the frame is the
+   grayest, panes are near white, floating surfaces and controls are pure
+   white on a hairline. Accents are redrawn, not reused: each hue deepens
+   to stay legible on white. */
+
+/* ── Paper: clean cool-neutral paper, indigo accent. The light default. ── */
 :root[data-theme="paper"] {
   color-scheme: light;
-  --clr-bg-0: #ececf1;
-  --clr-bg-1: #f6f6f9;
-  --clr-bg-2: #fbfbfd;
+
+  --clr-bg-0: #f0f0f3;
+  --clr-bg-1: #fcfcfd;
+  --clr-bg-2: #ffffff;
   --clr-bg-3: #ffffff;
-  --clr-bg-hover: rgb(28 30 60 / 0.05);
-  --clr-border-1: rgb(28 30 60 / 0.16);
-  --clr-border-2: rgb(28 30 60 / 0.085);
+  --clr-bg-hover: rgb(20 22 40 / 0.045);
+
+  --clr-border-1: rgb(20 22 40 / 0.14);
+  --clr-border-2: rgb(20 22 40 / 0.08);
+
   --clr-text-1: #1b1c22;
-  --clr-text-2: #5e6169;
-  --clr-text-3: #94969f;
-  --clr-accent: #5558d9;
-  --clr-accent-strong: #4346c8;
-  --clr-accent-dim: rgb(85 88 217 / 0.1);
+  --clr-text-2: #53565f;
+  --clr-text-3: #6e717b;
+
+  --clr-accent: #4e54d6;
+  --clr-accent-strong: #3b40c2;
+  --clr-accent-dim: rgb(78 84 214 / 0.1);
   --clr-accent-contrast: #ffffff;
-  --clr-working-copy: #0f8b74;
-  --clr-working-copy-dim: rgb(15 139 116 / 0.12);
-  --clr-ok: #2e9358;
-  --clr-warn: #aa7012;
-  --clr-danger: #d13b35;
-  --clr-scrollbar: rgb(28 30 60 / 0.18);
-  --clr-scrollbar-hover: rgb(28 30 60 / 0.3);
-  --shadow-1: 0 1px 2px rgb(28 30 60 / 0.08);
-  --shadow-2: 0 4px 16px rgb(28 30 60 / 0.12);
-  --shadow-3: 0 18px 50px rgb(28 30 60 / 0.18);
-  --shadow-edge: 0 1px 0 rgb(28 30 60 / 0.05);
+
+  --clr-working-copy: #0d8a6e;
+  --clr-working-copy-dim: rgb(13 138 110 / 0.1);
+  --clr-ok: #1f8a4c;
+  --clr-warn: #9a6700;
+  --clr-danger: #cf2d2d;
+
+  --clr-scrollbar: rgb(20 22 40 / 0.18);
+  --clr-scrollbar-hover: rgb(20 22 40 / 0.32);
+
+  --shadow-popover:
+    0 12px 32px -10px rgb(20 22 40 / 0.22),
+    0 2px 6px rgb(20 22 40 / 0.08);
 }
 
-/* ── Linen: warm cream, ink text, terracotta accent ── */
+/* ── Linen: warm cream, ink text, terracotta accent. ── */
 :root[data-theme="linen"] {
   color-scheme: light;
-  --clr-bg-0: #ece7df;
-  --clr-bg-1: #f6f2ea;
-  --clr-bg-2: #fbf8f2;
+
+  --clr-bg-0: #efe9e0;
+  --clr-bg-1: #fbf8f3;
+  --clr-bg-2: #fffdf9;
   --clr-bg-3: #fffdf9;
-  --clr-bg-hover: rgb(80 60 30 / 0.06);
-  --clr-border-1: rgb(80 60 30 / 0.16);
+  --clr-bg-hover: rgb(80 60 30 / 0.05);
+
+  --clr-border-1: rgb(80 60 30 / 0.15);
   --clr-border-2: rgb(80 60 30 / 0.085);
+
   --clr-text-1: #221d16;
-  --clr-text-2: #675f52;
-  --clr-text-3: #99917e;
-  --clr-accent: #c05f3c;
-  --clr-accent-strong: #a84b2c;
-  --clr-accent-dim: rgb(192 95 60 / 0.1);
+  --clr-text-2: #62594c;
+  --clr-text-3: #766d5f;
+
+  --clr-accent: #b75a37;
+  --clr-accent-strong: #9d4a2b;
+  --clr-accent-dim: rgb(183 90 55 / 0.1);
   --clr-accent-contrast: #ffffff;
+
   --clr-working-copy: #0e8a78;
-  --clr-working-copy-dim: rgb(14 138 120 / 0.12);
+  --clr-working-copy-dim: rgb(14 138 120 / 0.1);
   --clr-ok: #4a8f43;
   --clr-warn: #9a6e10;
   --clr-danger: #c03e30;
+
   --clr-scrollbar: rgb(80 60 30 / 0.2);
-  --clr-scrollbar-hover: rgb(80 60 30 / 0.32);
-  --shadow-1: 0 1px 2px rgb(70 50 20 / 0.08);
-  --shadow-2: 0 4px 16px rgb(70 50 20 / 0.12);
-  --shadow-3: 0 18px 50px rgb(70 50 20 / 0.18);
-  --shadow-edge: 0 1px 0 rgb(70 50 20 / 0.05);
+  --clr-scrollbar-hover: rgb(80 60 30 / 0.34);
+
+  --shadow-popover:
+    0 12px 32px -10px rgb(70 50 20 / 0.22),
+    0 2px 6px rgb(70 50 20 / 0.08);
 }
 
-/* ── Glacier: ice-blue paper, clear steel-blue accent ── */
+/* ── Glacier: ice-blue paper, clear steel-blue accent. ── */
 :root[data-theme="glacier"] {
   color-scheme: light;
-  --clr-bg-0: #e6ecf2;
-  --clr-bg-1: #f2f6fa;
-  --clr-bg-2: #f8fbfd;
+
+  --clr-bg-0: #e9eef4;
+  --clr-bg-1: #f8fafc;
+  --clr-bg-2: #ffffff;
   --clr-bg-3: #ffffff;
-  --clr-bg-hover: rgb(20 60 110 / 0.05);
-  --clr-border-1: rgb(20 60 110 / 0.16);
+  --clr-bg-hover: rgb(20 60 110 / 0.045);
+
+  --clr-border-1: rgb(20 60 110 / 0.15);
   --clr-border-2: rgb(20 60 110 / 0.085);
+
   --clr-text-1: #16202c;
-  --clr-text-2: #54657a;
-  --clr-text-3: #8b9aac;
-  --clr-accent: #2272c8;
-  --clr-accent-strong: #1a5da6;
-  --clr-accent-dim: rgb(34 114 200 / 0.1);
+  --clr-text-2: #4f6075;
+  --clr-text-3: #627184;
+
+  --clr-accent: #1f6fc5;
+  --clr-accent-strong: #185aa2;
+  --clr-accent-dim: rgb(31 111 197 / 0.1);
   --clr-accent-contrast: #ffffff;
+
   --clr-working-copy: #0c8a80;
-  --clr-working-copy-dim: rgb(12 138 128 / 0.12);
+  --clr-working-copy-dim: rgb(12 138 128 / 0.1);
   --clr-ok: #2c9356;
   --clr-warn: #a06f10;
   --clr-danger: #cd3d3d;
+
   --clr-scrollbar: rgb(20 60 110 / 0.18);
-  --clr-scrollbar-hover: rgb(20 60 110 / 0.3);
-  --shadow-1: 0 1px 2px rgb(20 50 100 / 0.08);
-  --shadow-2: 0 4px 16px rgb(20 50 100 / 0.12);
-  --shadow-3: 0 18px 50px rgb(20 50 100 / 0.18);
-  --shadow-edge: 0 1px 0 rgb(20 50 100 / 0.05);
+  --clr-scrollbar-hover: rgb(20 60 110 / 0.32);
+
+  --shadow-popover:
+    0 12px 32px -10px rgb(20 50 100 / 0.22),
+    0 2px 6px rgb(20 50 100 / 0.08);
 }
 
-/* ── Meadow: soft sage paper, pine accent ── */
+/* ── Meadow: soft sage paper, pine accent. Working copy goes peacock blue
+   to stay distinct from all the green. ── */
 :root[data-theme="meadow"] {
   color-scheme: light;
-  --clr-bg-0: #e7ece5;
-  --clr-bg-1: #f3f6f1;
-  --clr-bg-2: #f9fbf7;
+
+  --clr-bg-0: #eaeee7;
+  --clr-bg-1: #f9fbf8;
+  --clr-bg-2: #ffffff;
   --clr-bg-3: #ffffff;
-  --clr-bg-hover: rgb(30 70 40 / 0.05);
-  --clr-border-1: rgb(30 70 40 / 0.16);
+  --clr-bg-hover: rgb(30 70 40 / 0.045);
+
+  --clr-border-1: rgb(30 70 40 / 0.15);
   --clr-border-2: rgb(30 70 40 / 0.085);
+
   --clr-text-1: #1a211b;
-  --clr-text-2: #5a675c;
-  --clr-text-3: #909c92;
-  --clr-accent: #2c8050;
-  --clr-accent-strong: #236a42;
-  --clr-accent-dim: rgb(44 128 80 / 0.1);
+  --clr-text-2: #556257;
+  --clr-text-3: #687369;
+
+  --clr-accent: #2a7c4d;
+  --clr-accent-strong: #216640;
+  --clr-accent-dim: rgb(42 124 77 / 0.1);
   --clr-accent-contrast: #ffffff;
+
   --clr-working-copy: #0d7f9b;
-  --clr-working-copy-dim: rgb(13 127 155 / 0.12);
+  --clr-working-copy-dim: rgb(13 127 155 / 0.1);
   --clr-ok: #379152;
   --clr-warn: #a06f10;
   --clr-danger: #c63f38;
+
   --clr-scrollbar: rgb(30 70 40 / 0.18);
-  --clr-scrollbar-hover: rgb(30 70 40 / 0.3);
-  --shadow-1: 0 1px 2px rgb(25 60 35 / 0.08);
-  --shadow-2: 0 4px 16px rgb(25 60 35 / 0.12);
-  --shadow-3: 0 18px 50px rgb(25 60 35 / 0.18);
-  --shadow-edge: 0 1px 0 rgb(25 60 35 / 0.05);
+  --clr-scrollbar-hover: rgb(30 70 40 / 0.32);
+
+  --shadow-popover:
+    0 12px 32px -10px rgb(25 60 35 / 0.22),
+    0 2px 6px rgb(25 60 35 / 0.08);
 }
 
-/* ── Dawn: rose-gray paper, raspberry accent ── */
+/* ── Dawn: rose-gray paper, raspberry accent. ── */
 :root[data-theme="dawn"] {
   color-scheme: light;
-  --clr-bg-0: #efe7e8;
-  --clr-bg-1: #f8f2f3;
-  --clr-bg-2: #fcf8f8;
-  --clr-bg-3: #fffdfd;
-  --clr-bg-hover: rgb(90 40 60 / 0.05);
-  --clr-border-1: rgb(90 40 60 / 0.16);
+
+  --clr-bg-0: #f2eaec;
+  --clr-bg-1: #fcf8f9;
+  --clr-bg-2: #ffffff;
+  --clr-bg-3: #ffffff;
+  --clr-bg-hover: rgb(90 40 60 / 0.045);
+
+  --clr-border-1: rgb(90 40 60 / 0.15);
   --clr-border-2: rgb(90 40 60 / 0.085);
+
   --clr-text-1: #251c1f;
-  --clr-text-2: #6b5d62;
-  --clr-text-3: #a08f95;
-  --clr-accent: #b13767;
-  --clr-accent-strong: #962b56;
-  --clr-accent-dim: rgb(177 55 103 / 0.1);
+  --clr-text-2: #675a5f;
+  --clr-text-3: #7a6b70;
+
+  --clr-accent: #ad3564;
+  --clr-accent-strong: #922a53;
+  --clr-accent-dim: rgb(173 53 100 / 0.1);
   --clr-accent-contrast: #ffffff;
+
   --clr-working-copy: #0f8a7c;
-  --clr-working-copy-dim: rgb(15 138 124 / 0.12);
+  --clr-working-copy-dim: rgb(15 138 124 / 0.1);
   --clr-ok: #3a8f53;
   --clr-warn: #a26d0e;
   --clr-danger: #c93a32;
+
   --clr-scrollbar: rgb(90 40 60 / 0.18);
-  --clr-scrollbar-hover: rgb(90 40 60 / 0.3);
-  --shadow-1: 0 1px 2px rgb(80 35 55 / 0.08);
-  --shadow-2: 0 4px 16px rgb(80 35 55 / 0.12);
-  --shadow-3: 0 18px 50px rgb(80 35 55 / 0.18);
-  --shadow-edge: 0 1px 0 rgb(80 35 55 / 0.05);
+  --clr-scrollbar-hover: rgb(90 40 60 / 0.32);
+
+  --shadow-popover:
+    0 12px 32px -10px rgb(80 35 55 / 0.22),
+    0 2px 6px rgb(80 35 55 / 0.08);
+}
+
+/* Light-scheme palettes: the same hues deepened to hold contrast on
+   paper. :where() keeps specificity at bare :root, so a later
+   :root[data-theme="…"] block can retune any single token. */
+:root:where(
+    [data-theme="paper"],
+    [data-theme="linen"],
+    [data-theme="glacier"],
+    [data-theme="meadow"],
+    [data-theme="dawn"]
+  ) {
+  /* On paper the recesses go gray, not dark. */
+  --clr-bg-well: color-mix(in srgb, var(--clr-bg-0) 55%, var(--clr-bg-1));
+  --diff-gutter-surface: color-mix(in srgb, var(--clr-bg-0) 40%, var(--clr-bg-1));
+  --diff-recess: color-mix(in srgb, var(--clr-bg-0) 65%, var(--clr-bg-1));
+  --diff-file-head: color-mix(in srgb, var(--clr-bg-0) 45%, var(--clr-bg-1));
+
+  --syn-kw: #8039a8;
+  --syn-str: #3f7a1c;
+  --syn-const: #9a5f08;
+  --syn-type: #0f6a80;
+  --syn-fn: #2b5cb5;
+  --syn-prop: #475f88;
+  --syn-comment: var(--clr-text-3);
+  --syn-meta: #935f26;
+
+  --diff-add-fg: #1a7f37;
+  --diff-add-bg: rgb(46 164 79 / 0.12);
+  --diff-add-gutter: color-mix(in srgb, rgb(46 164 79) 18%, var(--clr-bg-1));
+  --diff-add-word: rgb(46 164 79 / 0.3);
+  --diff-del-fg: #c42b2b;
+  --diff-del-bg: rgb(230 70 60 / 0.1);
+  --diff-del-gutter: color-mix(in srgb, rgb(230 70 60) 15%, var(--clr-bg-1));
+  --diff-del-word: rgb(230 70 60 / 0.26);
+
+  --lane-1: #1f78c0;
+  --lane-2: #9544b3;
+  --lane-3: #c23a76;
+  --lane-4: #24875a;
+  --lane-5: #96690f;
 }

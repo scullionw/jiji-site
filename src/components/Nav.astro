@@ -3,42 +3,28 @@ import Logo from "./Logo.astro";
 import { DOWNLOAD_URL, GITHUB_URL } from "../config";
 ---
 
-<header class="nav" id="site-nav">
+<header class="nav">
   <div class="container nav-inner">
-    <Logo size={26} />
-    <nav class="nav-links" aria-label="Primary">
+    <Logo size={22} />
+    <nav class="links" aria-label="Primary">
       <a href="#features">Features</a>
-      <a href="#workstreams">Workstreams</a>
-      <a href="#themes">Themes</a>
+      <a href="#stacks">Stacks</a>
       <a href="#pricing">Pricing</a>
-      <a href={GITHUB_URL} rel="noopener">GitHub</a>
+      <a href="#faq">FAQ</a>
+      <a href={GITHUB_URL}>GitHub</a>
     </nav>
-    <a class="btn btn-primary nav-dl" href={DOWNLOAD_URL}>Download</a>
+    <a class="btn primary small" href={DOWNLOAD_URL}>Download</a>
   </div>
 </header>
-
-<script>
-  const nav = document.getElementById("site-nav");
-  const onScroll = () => nav?.classList.toggle("scrolled", window.scrollY > 8);
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-</script>
 
 <style>
   .nav {
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 10;
     height: var(--nav-h);
-    background: color-mix(in srgb, var(--clr-bg-0) 78%, transparent);
-    backdrop-filter: saturate(1.4) blur(14px);
-    -webkit-backdrop-filter: saturate(1.4) blur(14px);
-    border-bottom: 1px solid transparent;
-    transition: border-color var(--t-med) var(--ease-out);
-  }
-
-  .nav.scrolled {
-    border-bottom-color: var(--clr-border-2);
+    background: var(--clr-bg-0);
+    border-bottom: 1px solid var(--clr-border-2);
   }
 
   .nav-inner {
@@ -48,35 +34,26 @@ import { DOWNLOAD_URL, GITHUB_URL } from "../config";
     gap: var(--sp-5);
   }
 
-  .nav-links {
+  .links {
     display: flex;
     align-items: center;
-    gap: clamp(14px, 2.4vw, 30px);
+    gap: clamp(12px, 2.4vw, 24px);
     margin-left: auto;
+    font-size: 0.9rem;
   }
 
-  .nav-links a {
-    font-size: 0.95rem;
+  .links a {
     color: var(--clr-text-2);
     transition: color var(--t-fast) var(--ease-out);
   }
 
-  .nav-links a:hover {
+  .links a:hover {
     color: var(--clr-text-1);
   }
 
-  .nav-dl {
-    height: 38px;
-    padding: 0 16px;
-    font-size: 0.92rem;
-  }
-
   @media (max-width: 640px) {
-    .nav-links {
+    .links a:not(:last-child) {
       display: none;
-    }
-    .nav-dl {
-      margin-left: auto;
     }
   }
 </style>

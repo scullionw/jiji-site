@@ -1,10 +1,10 @@
 ---
-// Brand lockup: the app icon + "Jiji" wordmark. Used in the nav and footer.
+// Brand lockup: the app icon and the name. Used in the nav and footer.
 interface Props {
   size?: number;
   href?: string | null;
 }
-const { size = 26, href = "/" } = Astro.props;
+const { size = 22, href = "/" } = Astro.props;
 const Tag = href ? "a" : "span";
 ---
 
@@ -17,7 +17,7 @@ const Tag = href ? "a" : "span";
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     color: var(--clr-text-1);
   }
 
@@ -28,8 +28,7 @@ const Tag = href ? "a" : "span";
   }
 
   .word {
-    font-size: 1.18rem;
-    font-weight: 640;
-    letter-spacing: -0.02em;
+    font-size: 1rem;
+    font-weight: 600;
   }
 </style>
