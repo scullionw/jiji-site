@@ -1,7 +1,7 @@
 // Every outward-facing URL and fact the site states, in one place.
 
 export const SITE_URL = "https://jijiworkbench.com";
-export const VERSION = "0.4.0";
+export const VERSION = "0.4.1";
 
 // GitHub serves the newest release's universal DMG at this address, so the
 // link never needs bumping per release.
